@@ -1,0 +1,3 @@
+[submodule "workshop01/webapp"]
+	path = workshop01/webapp
+	url = https://github.com/SageSG/basic-angular-app
