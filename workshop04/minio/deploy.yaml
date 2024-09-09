@@ -89,6 +89,13 @@ spec:
             port: 9000
           initialDelaySeconds: 60
           periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /minio/health/ready
+            port: 9000
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 5
         ports:
         - name: data
           containerPort: 9000
