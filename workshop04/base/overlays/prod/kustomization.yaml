@@ -1,0 +1,40 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# prod
+resources:
+- ../../base # look for a file call customisation
+- dov-ing.yaml
+
+# add new labels
+labels:
+  - pairs:
+    env: prod
+    includeSelectors: true
+    includeTemplates: true
+  namePrefix: prod-
+  namespace: prod-ns
+
+replicas:
+  - name : dov-deploy
+  count: 3
+
+images:
+- name: chukmunnlee/dov-bear
+  tag: v5-prod
+
+configMapGenerator:
+- name: dov-cm
+  behaviour: create
+  literals:
+  - INSTANCE_NAME = prod-version
+  files:
+  - config.cnf=config.cnf
+
+patches:
+- target: 
+  group: apps
+  version: v1
+  kind: Deployment
+  name: dov-deploy
+path: patch.yaml # can only patch 1 resource once , all changes insert to same file

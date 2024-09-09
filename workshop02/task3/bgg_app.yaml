@@ -1,0 +1,42 @@
+---
+apiVersion: v1
+kind: Deployment
+metadata: 
+  name: bggdb-deploy
+  namespace: bggns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bgg-db
+  template:
+    metadata:
+      labels:
+        app: bgg-db
+    spec:
+      containers:
+        - name: db-image
+          image: stackupiss/ngg-database:v1
+          imagePullPolicy: IfNotPresent
+          envFrom:
+          - configMapRef:
+            name: bgg-config
+          - secretRef:
+            name: bgg-secret
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bggdb-svc
+  namespace:bggns
+spec:
+  selector:
+    app: bgg-db
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP
+---

@@ -1,0 +1,26 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bggns
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bgg-config
+  namespace: bggns
+data:
+  BGG_DB_USER: root
+  BGG_DB_HOST: mydb-svc
+  BGG_DB_PASSWORD: changeit
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: myapp-secret
+  namespace: bggns
+type: Opaque
+data:
+  BGG_DB_USER: cm9vdAo=  # base64 encoded value of 'root'
+  BGG_DB_HOST: bXlkYi1zdmM=  # base64 encoded value of 'mydb-svc'
+  BGG_DB_PASSWORD: Y2hhbmdlaXQ=  # base64 encoded value of 'changeit'

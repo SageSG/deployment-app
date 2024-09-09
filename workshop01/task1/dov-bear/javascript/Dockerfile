@@ -16,9 +16,10 @@ COPY ./views views
 RUN npm ci
 
 #Set environment variable
-ENV PORT=3000
-ENV INSTANCE_NAME="javascript_local"
-ENV INSTANCE_HASH="test12345"
+ENV PORT=3000 INSTANCE_NAME="javascript_local" INSTANCE_HASH="test12345"
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+    CMD curl -s localhost:${PORT}/healthz || exit 1
 
 # what are the explosed port
 EXPOSE ${PORT}

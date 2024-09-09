@@ -1,0 +1,48 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config
+  namespace: default
+data:
+  readme.txt: | 
+    hello, world
+    hello, world
+    hello, world
+  values.yaml: |
+    controller:
+      image:
+        image: fred/myimage
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql-po
+  namespace: default
+spec:
+  volumes:
+    # name: data-vol
+    # emptyDir : {} // If POD dies, this will get deleted instead of hostPath
+    #mountPath: /opt/tmp (internal containers sharing of data)
+    # - name: config-vol
+    # configMap: 
+    #   name: config
+    - name: data-vol
+      persistentVolumeClain: 
+        claimName: mysql-pvc
+  containers:
+  - name: mysql-container
+  image: mysql: 8
+  env:
+  - name : MYSQL_ROOT_PASSWORD
+    value : changeit
+  ports: 
+  - containerPort: 3306
+  volumeMounts: 
+  # - name: data-vol
+  #   mounthPath: /var/lib/mysql
+  - name: data-vol
+    mounthPath: /opt/config
+    readOnly: true
+  resources: {}
+  # /var/lib/mysql
